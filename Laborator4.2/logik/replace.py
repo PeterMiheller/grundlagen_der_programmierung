@@ -20,4 +20,4 @@ def replace(filename, word, new_word):
     with open(filename, 'w') as f:
         f.write(' '.join(modified_lines))
 
-    print(f"Ersetzt '{word}' durch '{new_word})
+    print(f"Ersetzt {word} durch {new_word}")
