@@ -1,0 +1,18 @@
+Hier ist Ihre Zeichnung dap:
+speed
+pensize
+forward10
+forward10
+forward10
+forward10
+backward10
+backward10
+backward10
+backward10
+backward10
+down
+backward10
+backward10
+up
+backward10
+backward10
