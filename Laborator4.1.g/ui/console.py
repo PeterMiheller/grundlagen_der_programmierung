@@ -9,9 +9,15 @@ def menu():
 
     """
 
+
+def move_turtle(new_x, new_y):
+    t.penup()
+    t.goto(new_x, new_y)
+    t.pendown()
 def main():
     x = -325.00
     y = 250.00
+    space_between_letters = 40
     while True:
         print(menu())
         try:
@@ -19,11 +25,14 @@ def main():
             if opt==1:
                 try:
                     t.teleport(x,y)
-                    litera = input('Wählen Sie Litter:\n ')
-                    instructiuni = letters.get(litera)
-                    if instructiuni:
-                        x+=50
+                    wort= input('Wählen Sie ein Wort:\n ')
+                    for litera in wort.upper():
+                        instructiuni = letters.get(litera)
+                        move_turtle(x, y)
+                        x += space_between_letters
                         for actiune in instructiuni:
+                                if actiune == 'save':
+                                    x+=30
                                 if actiune == 'speed':
                                     t.speed(50)
                                 if actiune == 'pensize':
@@ -180,6 +189,8 @@ def main():
                                     t.home()
                                 if actiune == '.':
                                     t.dot(7)
+                                if actiune == 'space':
+                                    t.forward(50)
                 except ValueError:
                     print('Wählen Sie Litter:\n ')
 
