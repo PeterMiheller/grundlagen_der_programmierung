@@ -1,0 +1,25 @@
+Hier ist Ihre Zeichnung bubu:
+speed
+pensize
+forward10
+forward10
+forward10
+left45
+left45
+forward10
+forward10
+forward10
+forward10
+forward10
+forward10
+right45
+right45
+up
+forward10
+forward10
+forward10
+forward10
+down
+backward10
+backward10
+backward10
