@@ -1,3 +1,5 @@
+import tabnanny
+
 from logik.letters import *
 def menu():
     return"""
@@ -5,19 +7,31 @@ def menu():
 
     1. Textnachricht zeichnen
     2. Neues Zeichen hinzufügen
+    3. Das benutzerdefinierte Zeichen zeichnen
     0. Exit
 
     """
+def reafist_text(name):
+    p=[]
+    f=open('desen.txt','r')
+    actions=f.readlines()
+    for comand in actions[1:]:
+        p.append(comand.strip())
 
+    letters[name] = p
+    print(letters[name])
+    f.close()
 
 def move_turtle(new_x, new_y):
-    t.penup()
+    t.up()
+    t.home()
     t.goto(new_x, new_y)
-    t.pendown()
+    t.down()
 def main():
     x = -325.00
     y = 250.00
     space_between_letters = 40
+    zeichen=None
     while True:
         print(menu())
         try:
@@ -233,17 +247,46 @@ def main():
                                 drawings[zeichen] = l
                                 print(drawings)
                             with open('desen.txt', 'w') as file:
-                                file.write(f'Hier ist Ihre Zeichnung {zeichen}:\n')
+                                file.write(zeichen + '\n')
                                 for actiune in l:
                                     file.write(actiune + '\n')
                             t.reset()
                             print('Das Zeiche wurde ins "desen.txt" gespeichert')
-                            main()
+                            break
 
 
                     except KeyError:
                         print('')
                         print('Das gewählte Key existiert nicht: \n')
+
+            if opt == 3:
+                if zeichen is None:
+                    print("Bitte wählen Sie zuerst Option 2, um ein Zeichen hinzuzufügen.")
+                    continue
+                else:
+                    move_turtle(-250,-100)
+                    reafist_text(zeichen)
+                    instructiuni = letters.get(zeichen)
+                    for actiune in instructiuni:
+                        if actiune == 'speed':
+                            t.speed(10)
+                        if actiune == 'pensize':
+                            t.pensize(5)
+                        if actiune == 'forward10':
+                            t.forward(10)
+                        if actiune == 'backward10':
+                            t.backward(10)
+                        if actiune == 'right45':
+                            t.right(45)
+                        if actiune =='left45':
+                            t.left(45)
+                        if actiune =='up':
+                            t.up()
+                        if actiune =='down':
+                            t.down()
+                        if actiune == ' ':
+                            break
+
             if opt==0:
                 turtle.done()
                 break

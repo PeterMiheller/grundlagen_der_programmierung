@@ -2,7 +2,7 @@ import turtle
 t=turtle.Pen()
 
 letters={
-    'A':['speed','pensize','left75','forward50','right145','forward50','backward15','right110','forward20','backward20','left110','forward15','left70'],
+    'A':['speed','pensize','left75','forward50','right145','forward50','backward15','right110','forward20','backward20','left110','forward15','left70','save'],
     'B':['speed','pensize','left90','forward40','circle-15/200','forward20','left180','circle-15/250','forward30','right180','forward50','save'],
     'C':['speed','pensize','up','forward20','down','circle25/-180','circle25/180','save'],
     'D':['speed','pensize','left90','forward45','right150','forward50','right110','forward25','left170'],
