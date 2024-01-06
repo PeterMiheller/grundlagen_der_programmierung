@@ -1,4 +1,3 @@
-import tabnanny
 
 from logik.letters import *
 def menu():
@@ -38,6 +37,9 @@ def main():
             opt=int(input('Was möchten Sie zeichnen?:\n '))
             if opt==1:
                 try:
+                    t.up()
+                    t.home()
+                    t.down()
                     t.teleport(x,y)
                     wort= input('Wählen Sie ein Wort:\n ')
                     for litera in wort.upper():
