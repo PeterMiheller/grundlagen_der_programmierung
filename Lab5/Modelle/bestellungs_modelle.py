@@ -22,6 +22,10 @@ class Gekochtergericht(Gericht):
     def __str__(self):
         return f'{self.name} mit: ID:{self.id} Portionsgröße:{self.portionsgröße}, Preis:{self.preis}, Zubereitungszeit:{self.zubereitungszeit}'
 
+    def __eq__(self, other):
+        return (self.id == other.id and self.portionsgröße == other.portionsgröße and self.preis == other.preis
+                and self.name == other.name and self.zubereitungszeit == other.zubereitungszeit)
+
 
 class Getränk(Gericht):
     def __init__(self, id: int, portionsgröße: str, preis: int, name: str, alkoholgehalt: str):
@@ -31,6 +35,10 @@ class Getränk(Gericht):
 
     def __str__(self):
         return f'{self.name} mit: ID:{self.id} Größe:{self.portionsgröße}, Preis:{self.preis}, Alkoholgehalt:{self.alkoholgehalt}'
+
+    def __eq__(self, other):
+        return (self.id == other.id and self.portionsgröße == other.portionsgröße and self.preis == other.preis
+                and self.name == other.name and self.alkoholgehalt == other.alkoholgehalt)
 
 
 class Kunde(Identifizierbar):
@@ -54,9 +62,7 @@ class Bestellung(Identifizierbar):
         self.getränk_id = getränk_id
         self.gesamtkosten = 0
 
-    # def total_kosten(self,total_bestellung):
-    #     kosten = reduce(lambda x, y: x + y, total_bestellung)
-    #     return kosten
+
     def calculate_total_cost(self, gerichte, getränke):
         gericht_kosten = [gericht.price for gericht in gerichte if gericht.id in self.gerichts_id_liste]
         getränk_kosten = [getränk.price for getränk in getränke if getränk.id in self.getränk_id_liste]
@@ -83,3 +89,6 @@ class Bestellung(Identifizierbar):
             rechnung += f"{getränk.id}: {getränk.portionsgröße} - {getränk.preis}\n"
         rechnung += f'\nGesamtkosten:{self.gesamtkosten}\n'
         return rechnung
+
+    def __str__(self):
+        return f'BestellungsID: {self.id}, KundenID: {self.kunden_id}, GerichtsID: {self.gerichts_id}, GetränksId: {self.getränk_id}'

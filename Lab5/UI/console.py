@@ -10,21 +10,12 @@ class Console:
         self.repo = None
         self.controller = None
 
-    # def __init__(self):
-    #     print('Wählen Sie einen Repo?:\n1-KundenRepo für  Kundenliste\n2-Drink- und CookedDishRepo für Speisekarte\n ')
-    #     wahl = int(input())
-    #     if wahl == 1:
-    #         repo = CustomerRepo('kunden.data')
-    #     if wahl == 2:
-    #         repo=DrinkRepo('speisekarte.data') and CookedDishRepo('speisekarte.data')
-    #     self.repo=repo
-    #     self.controller=Controller(self.repo)
-
     def menu(self):
         return """
         1- Neue Bestellung registrieren
         2- Speisekarte verwalten
         3- Kundenliste verwalten
+        4- Bestellungsliste zeigen
         0- Exit   
         """
 
@@ -62,7 +53,6 @@ class Console:
                         self.run()
                     bestellungs_id = int(input('ID der Bestellung:'))
 
-
                     self.repo = CookedDishRepo()
                     self.controller = Controller(self.repo)
                     speisen = self.controller.repo.load()
@@ -82,9 +72,9 @@ class Console:
                             dish_bill = dish
                     else:
                         print("Nicht gefunden.")
-                    self.repo = OrderRepo('orders.data')
-                    self.controller = Controller(self.repo)
-                    self.controller.repo.add(selected_dish)
+                    # self.repo = OrderRepo('orders.data')
+                    # self.controller = Controller(self.repo)
+                    # self.controller.repo.add(found_dish)
                     self.repo = DrinkRepo()
                     self.controller = Controller(self.repo)
                     selected_drink = input('Was haben sie gawählt zum trinken:')
@@ -102,8 +92,9 @@ class Console:
                         print("Nicht gefunden.")
                     self.repo = OrderRepo('orders.data')
                     self.controller = Controller(self.repo)
-                    self.controller.repo.add(selected_drink)
+                    #self.controller.repo.add(found_drink)
                     neue_bestellung = Bestellung(bestellungs_id, kunden_id, gerichts_id, getränk_id)
+                    self.controller.repo.add(neue_bestellung)
                     bill = self.controller.repo.generate_bill(dish_bill, drink_bill, kunde_bill)
                     print(bill)
                     ora_actuala = datetime.datetime.now().time()
@@ -130,7 +121,7 @@ class Console:
                         self.controller = Controller(self.repo)
                         name = input('Name:')
                         preis = int(input('Preis in Euro: '))
-                        portionsgröße = input('Größe in Gramm: ')
+                        portionsgröße = input('Größe in Liter: ')
                         alkoholgehalt = int(input('Alkoholgehalt in %: '))
                         id = int(input('ID: '))
                         self.controller.add_neues_getränk(id, portionsgröße, preis, name, alkoholgehalt)
@@ -144,9 +135,90 @@ class Console:
                             print(gericht)
 
                 if choice == 3:
-                    pass
+                    opt3 = int(input('Was möchten Sie aktualisieren?:\n1.Gericht\n2.Getränk\n'))
+                    if opt3 == 1:
+
+                        self.repo = CookedDishRepo()
+                        self.controller = Controller(self.repo)
+                        selected_dish = input('Welches Gericht möchten Sie aktualisieren:')
+                        found_dishes = self.controller.repo.find_dish(selected_dish)
+                        speise_actualizat = None
+                        if found_dishes:
+                            print("Gefundenes Gericht:")
+                            for dish in found_dishes:
+                                print(f"ID: {dish.id}, Name: {dish.name}, Preis: {dish.preis} ")
+                                speise_actualizat = [dish]
+                        else:
+                            print("Keines Gericht gefunden.")
+                            self.run()
+
+                        new_name = input('Neue Name:')
+                        new_id = input('Neues id:')
+                        new_portionsgröße = input('Neue Portionsgröße:')
+                        new_preis = input('Neues Preis:')
+                        new_time = input('Neue Zubereitungszeit: ')
+                        print('Getränk wurde aktualisiert')
+                        self.controller.repo.aktualisieren_dish(new_id, new_portionsgröße, new_preis, new_name,
+                                                                new_time,
+                                                                speise_actualizat)
+
+                    if opt3 == 2:
+                        drink_actualizat = None
+                        found_drink = None
+                        self.repo = DrinkRepo()
+                        self.controller = Controller(self.repo)
+                        selected_drink = input('Welches Getränk möchten Sie aktualisieren:')
+                        found_drink = self.controller.repo.find_drink(selected_drink)
+
+                        if found_drink:
+                            print("Gefundenes Getränk:")
+                            for drink in found_drink:
+                                print(f"ID: {drink.id}, Name: {drink.name}, Preis: {drink.preis} ")
+                                drink_actualizat = [drink]
+                        else:
+                            print("Keines Getränk gefunden.")
+                            self.run()
+
+                        new_name = input('Neue Name:')
+                        new_id = input('Neues id:')
+                        new_portionsgröße = input('Neue Portionsgröße:')
+                        new_preis = input('Neues Preis:')
+                        new_alkoholgehalt = input('Neues Alkoholgehalt: ')
+                        print('Getränk wurde aktualisiert')
+                        self.controller.repo.aktualisieren_drink(new_id, new_portionsgröße, new_preis, new_name,
+                                                                 new_alkoholgehalt, drink_actualizat)
+
                 if choice == 4:
-                    pass
+                    opt4 = int(input('Was möchten Sie löschen?:\n1.Gericht\n2.Getränk\n'))
+                    if opt4 == 1:
+                        self.repo = CookedDishRepo()
+                        self.controller = Controller(self.repo)
+                        selected_dish_delete = input('Welches Gericht möchten Sie löschen:')
+                        found_dish = self.controller.repo.find_dish(selected_dish_delete)
+
+                        if found_dish:
+                            print("Gefundenes Gericht:")
+                            for dish in found_dish:
+                                print(
+                                    f"ID: {dish.id}, Name: {dish.name}, Preis: {dish.preis} wurde erfolgreich gelöscht")
+                            self.controller.repo.delete(found_dish)
+                        else:
+                            print('Kein Gericht gefunden')
+                    if opt4 == 2:
+                        self.repo = DrinkRepo()
+                        self.controller = Controller(self.repo)
+                        selected_drink_delete = input('Welches Getränk möchten Sie löschen:')
+                        found_drink = self.controller.repo.find_drink(selected_drink_delete)
+
+                        if found_drink:
+                            print("Gefundenes Getränk:")
+                            self.controller.repo.delete(found_drink)
+                            for drink in found_drink:
+                                print(
+                                    f"ID: {drink.id}, Name: {drink.name}, Preis: {drink.preis} wurde erfolgreich gelöscht")
+
+                        else:
+                            print('Kein Getränk gefunden')
             if opt == 3:
                 self.repo = CustomerRepo()
                 self.controller = Controller(self.repo)
@@ -180,22 +252,22 @@ class Console:
 
                 if choice == 3:
                     try:
-                        kunde_actualizat=None
+                        kunde_actualizat = None
                         nume_actualizat = input('Wen möchten Sie aktualisieren?: ')
                         found_customers = self.controller.repo.find_customer(nume_actualizat)
                         if found_customers:
                             print("Gefundene Kunden:")
                             for customer in found_customers:
                                 print(f"ID: {customer.id}, Name: {customer.name}, Adresse: {customer.adresse}\n")
-                                kunde_actualizat=customer
+                                kunde_actualizat = customer
                         else:
                             print("Keine Kunden gefunden.")
                             self.run()
 
                         new_id = input('Neues id:')
-                        new_name=input('Neue Name:')
+                        new_name = input('Neue Name:')
                         new_adress = input('Neue Adresse:')
-                        self.controller.repo.aktualisieren(new_name, new_id, new_adress,kunde_actualizat)
+                        self.controller.repo.aktualisieren(new_name, new_id, new_adress, kunde_actualizat)
                     except FileNotFoundError:
                         print("Bitte zuerst Kunde hinfugen")
                 if choice == 4:
@@ -205,13 +277,26 @@ class Console:
                         if found_customers:
                             print("Gefundene Kunden:")
                             for customer in found_customers:
-                                print(f"ID: {customer.id}, Name: {customer.name}, Adresse: {customer.adresse} wurde erfolgreich gelöscht\n")
+                                print(
+                                    f"ID: {customer.id}, Name: {customer.name}, Adresse: {customer.adresse} wurde erfolgreich gelöscht\n")
                             self.controller.repo.delete(found_customers)
                         else:
                             print("Keine Kunden gefunden.")
                             self.run()
                     except FileNotFoundError:
                         print("Bitte zuerst Kunde hinfugen")
+
+            if opt == 4:
+                try:
+                    self.repo = OrderRepo('orders.data')
+                    self.controller = Controller(self.repo)
+                    orders = self.controller.repo.load()
+                    for line in orders:
+                        for order in line:
+                            print(order)
+                except FileNotFoundError:
+                    print("Bitte zuerst Bestellung hinfügen")
+                    self.run()
 
             if opt == 0:
                 break

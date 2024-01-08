@@ -63,8 +63,6 @@ class CookedDishRepo:
         pickle.dump(self.gericht, f)
         f.close()
 
-
-
     def load(self):
         with open(self.filename, 'rb') as f:
             while True:
@@ -82,6 +80,42 @@ class CookedDishRepo:
             if found_dish:
                 return found_dish
 
+    def aktualisieren_dish(self, new_id, new_portionsgröße, new_preis, new_name, new_time, speise_actualizat):
+        g = []
+        with open(self.filename, 'rb') as f:
+            while True:
+                try:
+                    obj = pickle.load(f)
+                    g.append(obj)
+                except EOFError:
+                    break
+        if speise_actualizat in g:
+            new_gericht = [Gekochtergericht(new_id, new_portionsgröße, new_preis, new_name, new_time)]
+            index = g.index(speise_actualizat)
+            g[index] = new_gericht
+        f = open(self.filename, 'wb')
+        for i in g:
+            pickle.dump(i, f)
+        f.close()
+
+    def delete(self, selected_dish_delete):
+        dishes = []
+        with open(self.filename, 'rb') as f:
+            while True:
+                try:
+                    obj = pickle.load(f)
+                    dishes.append(obj)
+                except EOFError:
+                    break
+
+        for dish in dishes:
+            if dish == selected_dish_delete:
+                dishes.remove(dish)
+        f = open(self.filename, 'wb')
+        for d in dishes:
+            pickle.dump(d, f)
+        f.close()
+
 
 class DrinkRepo:
     def __init__(self):
@@ -97,7 +131,6 @@ class DrinkRepo:
         pickle.dump(self.getränk, f)
         f.close()
 
-
     def load(self):
         with open(self.filename, 'rb') as f:
             while True:
@@ -111,16 +144,51 @@ class DrinkRepo:
     def find_drink(self, selected_drink):
         getränke = self.load()
         for drinks in getränke:
-            found_drink = list(filter(lambda d: selected_drink.lower() in d.name.lower(),drinks))
+            found_drink = list(filter(lambda d: selected_drink.lower() in d.name.lower(), drinks))
             if found_drink:
                 return found_drink
+
+    def delete(self, selected_drink_delete):
+        drinks = []
+        with open(self.filename, 'rb') as f:
+            while True:
+                try:
+                    obj = pickle.load(f)
+                    drinks.append(obj)
+                except EOFError:
+                    break
+
+        for drink in drinks:
+            if drink == selected_drink_delete:
+                drinks.remove(drink)
+        f = open(self.filename, 'wb')
+        for d in drinks:
+            pickle.dump(d, f)
+        f.close()
+
+    def aktualisieren_drink(self, new_id, new_portionsgröße, new_preis, new_name, new_alkoholgehalt, drink_actualizat):
+        d = []
+        with open(self.filename, 'rb') as f:
+            while True:
+                try:
+                    obj = pickle.load(f)
+                    d.append(obj)
+                except EOFError:
+                    break
+        if drink_actualizat in d:
+            new_drink = [Getränk(new_id, new_portionsgröße, new_preis, new_name, new_alkoholgehalt)]
+            index = d.index(drink_actualizat)
+            d[index] = new_drink
+        f = open(self.filename, 'wb')
+        for i in d:
+            pickle.dump(i, f)
+        f.close()
 
 
 class CustomerRepo:
     def __init__(self):
         self.filename = 'kunden.data'
         self.kunden = []
-
 
     def add(self, neue_kunde):
         self.kunden.append(neue_kunde)
@@ -161,7 +229,7 @@ class CustomerRepo:
         f.close()
 
     def aktualisieren(self, nume_actualizat, new_id, new_adress, kunde_actualizat):
-        k=[]
+        k = []
         with open(self.filename, 'rb') as f:
             while True:
                 try:
@@ -177,6 +245,7 @@ class CustomerRepo:
         for i in k:
             pickle.dump(i, f)
         f.close()
+
     def find_customer(self, search_string):
         kunden = self.load()
         for customers in kunden:
@@ -199,15 +268,25 @@ class OrderRepo(DataRepo):
         pickle.dump(self.orders, f)
         f.close()
 
-    def calculate_total_cost(self,gericht, getränk):
-        return gericht.preis+getränk.preis
+    def load(self):
+        with open(self.filename, 'rb') as f:
+            while True:
+                try:
+                    obj = pickle.load(f)
+                    self.orders.append(obj)
+                except EOFError:
+                    break
+        return self.orders
 
-    def generate_bill(self,gericht, getränk, kunde):
+    def calculate_total_cost(self, gericht, getränk):
+        return gericht.preis + getränk.preis
 
+    def generate_bill(self, gericht, getränk, kunde):
         rechnung = f'\n===== Rechnung =====\nKunde: {kunde.name}\nAdresse: {kunde.adresse}\nBestellte Gerichte: \n'
         rechnung += f"{gericht.name}: {gericht.portionsgröße} Gramm - {gericht.preis} Euro\n"
         rechnung += f"\nBestellte Getränke:\n"
         rechnung += f"{getränk.name}: {getränk.portionsgröße} Liter - {getränk.preis} Euro\n"
         rechnung += f'\nGesamtkosten:{self.calculate_total_cost(gericht, getränk)} Euro\n'
-        rechnung+= f"===================="
+        rechnung += f"===================="
         return rechnung
+
