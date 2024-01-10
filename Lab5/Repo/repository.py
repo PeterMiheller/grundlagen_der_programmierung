@@ -289,4 +289,3 @@ class OrderRepo(DataRepo):
         rechnung += f'\nGesamtkosten:{self.calculate_total_cost(gericht, getränk)} Euro\n'
         rechnung += f"===================="
         return rechnung
-
