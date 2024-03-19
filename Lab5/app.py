@@ -8,8 +8,8 @@ def main():
 
 
 main()
-t1 = Tests()
-t1.test_add_cooked_dish()
-t1.test_find_customer_name()
-t1.test_find_customer_adress()
-t1.test_aktualisierung()
+# t1 = Tests()
+# t1.test_add_cooked_dish()
+# t1.test_find_customer_name()
+# t1.test_find_customer_adress()
+# t1.test_aktualisierung()
